@@ -21,25 +21,17 @@ public class Automata extends JavaPlugin {
     private final AutomataBlockListener blockListener = new AutomataBlockListener(this);
     private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
 
-    public Automata(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
-        super(pluginLoader, instance, desc, folder, plugin, cLoader);
-        // TODO: Place any custom initialisation code here
-
-        // NOTE: Event registration should be done in onEnable not here as all events are unregistered when a plugin is disabled
-    }
-
-   
-
     public void onEnable() {
         // TODO: Place any custom enable code here including the registration of any events
 
         // Register our events
         PluginManager pm = getServer().getPluginManager();
-       
 
         // EXAMPLE: Custom code, here we just output some info so we can check all is well
         PluginDescriptionFile pdfFile = this.getDescription();
+
         System.out.println( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
+        System.out.println("Suck my cock.");
     }
     public void onDisable() {
         // TODO: Place any custom disable code here

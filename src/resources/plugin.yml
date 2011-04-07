@@ -1,0 +1,3 @@
+name: Automata
+main: MattTwoPointOh.Automata.Automata
+version: __VERSION_MACRO__
