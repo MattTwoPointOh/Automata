@@ -10,6 +10,7 @@
 
 	<fileset id="libs" dir="${lib.dir}">
 		<include name="Bukkit.jar"/>
+        <include name="CraftBukkit.jar"/>
 	</fileset>
 	
 	<target name="init">

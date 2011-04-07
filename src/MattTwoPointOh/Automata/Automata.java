@@ -1,56 +1,36 @@
 package MattTwoPointOh.Automata;
 
-import java.io.File;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.StorageMinecart;
+
 import java.util.HashMap;
-import org.bukkit.entity.Player;
-import org.bukkit.Server;
-import org.bukkit.event.Event.Priority;
-import org.bukkit.event.Event;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.PluginManager;
 
 /**
- * Automata for Bukkit
- *
- * @author MattTwoPointOh
+ * Created by IntelliJ IDEA.
+ * User: Matt
+ * Date: 4/7/11
+ * Time: 3:29 PM
+ * To change this template use File | Settings | File Templates.
  */
-public class Automata extends JavaPlugin {
-    private final AutomataPlayerListener playerListener = new AutomataPlayerListener(this);
-    private final AutomataBlockListener blockListener = new AutomataBlockListener(this);
-    private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
+public class Automata {
+    private HashMap<Integer, Automaton> automatonCollection = new HashMap<Integer, Automaton>();
 
-    public void onEnable() {
-        // TODO: Place any custom enable code here including the registration of any events
-
-        // Register our events
-        PluginManager pm = getServer().getPluginManager();
-
-        // EXAMPLE: Custom code, here we just output some info so we can check all is well
-        PluginDescriptionFile pdfFile = this.getDescription();
-
-        System.out.println( pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled!" );
-        System.out.println("Suck my cock.");
+    public void addAutomaton(StorageMinecart entity) {
+        System.out.println("Added automaton #" + entity.getEntityId());
+        automatonCollection.put(entity.getEntityId(), new Automaton(entity));
     }
-    public void onDisable() {
-        // TODO: Place any custom disable code here
 
-        // NOTE: All registered events are automatically unregistered when a plugin is disabled
-
-        // EXAMPLE: Custom code, here we just output some info so we can check all is well
-        System.out.println("Goodbye world!");
-    }
-    public boolean isDebugging(final Player player) {
-        if (debugees.containsKey(player)) {
-            return debugees.get(player);
-        } else {
-            return false;
+    public void removeAutomaton(Entity entity) {
+        if (automatonCollection.remove(entity.getEntityId()) != null) {
+            System.out.println("Removed automaton #" + entity.getEntityId());
         }
     }
 
-    public void setDebugging(final Player player, final boolean value) {
-        debugees.put(player, value);
+    public boolean isAutomaton(Entity entity) {
+        return automatonCollection.containsKey(entity.getEntityId());
+    }
+
+    public Automaton getAutomaton(Entity entity) {
+        return automatonCollection.get(entity.getEntityId());
     }
 }
-
