@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.entity.CraftMinecart;
@@ -42,6 +45,7 @@ public class AutomataPlugin extends JavaPlugin {
         //pm.registerEvent(Event.Type.VEHICLE_DESTROY, vehicleListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.VEHICLE_COLLISION_ENTITY, vehicleListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.VEHICLE_DAMAGE, vehicleListener, Priority.Normal, this);
+        pm.registerEvent(Event.Type.VEHICLE_MOVE, vehicleListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.ENTITY_DEATH, entityListener, Priority.Normal, this);
 
         // EXAMPLE: Custom code, here we just output some info so we can check all is well
@@ -72,6 +76,21 @@ public class AutomataPlugin extends JavaPlugin {
 
             player.sendMessage(ChatColor.AQUA + "Removed all minecarts.");
 
+            return true;
+        }
+        else if (label.equals("clearrails")) {
+            if (!(sender instanceof Player)) return false;
+
+            Player player = (Player) sender;
+
+            System.out.println("Looking for block states.");
+            Chunk playerChunk = player.getWorld().getChunkAt(player.getLocation());
+            for (BlockState bs: playerChunk.getTileEntities()) {
+                System.out.println("Block state: " + bs.getType());
+            }
+            //for (Chunk c: player.getWorld().getLoadedChunks()) {
+//                c.
+//            }
             return true;
         }
 

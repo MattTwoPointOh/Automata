@@ -42,8 +42,14 @@ public class AutomataVehicleListener extends VehicleListener {
             event.setDamage(0);
 
             automaton.toggleActive();
-            player.sendMessage("Toggling automaton.");
         }
+    }
+
+    @Override
+    public void onVehicleMove(VehicleMoveEvent event) {
+        Automaton automaton = automata.getAutomaton(event.getVehicle());
+        if (automaton == null) return;
+        automaton.onMoved(event);
     }
 
     @Override

@@ -5,3 +5,6 @@ commands:
   clearcarts:
     description: Clears all minecarts.
     usage: /command
+  clearrails:
+    description: Clears all minecart rails.
+    usage: /command
