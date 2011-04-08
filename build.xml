@@ -36,11 +36,10 @@
 		</manifest>
 
 		<!-- Make the plugin.yml file -->
-		<delete file="${build.dir}/plugin.yml"/>
-		<copy tofile="${build.dir}/plugin.yml" file="${src.dir}/resources/plugin.yml"/>
+		<copy file="${src.dir}/resources/plugin.yml" todir="${build.dir}" overwrite="true"/>
 		<replace file="${build.dir}/plugin.yml" token="__VERSION_MACRO__" value="${version}"/>
 		<mkdir dir="${build.dir}/defaults"/>
-		<copy tofile="${build.dir}/defaults/config.yml" file="${src.dir}/resources/config.yml"/>
+		<copy file="${src.dir}/resources/config.yml" todir="${build.dir}/defaults" overwrite="true"/>
 		<jar jarfile="${dist.dir}/Automata.jar" basedir="${build.dir}" manifest="${dist.dir}/manifest.mf"/>
 	</target>
 	

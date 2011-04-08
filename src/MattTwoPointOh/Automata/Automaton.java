@@ -2,6 +2,9 @@ package MattTwoPointOh.Automata;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.StorageMinecart;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,5 +23,9 @@ public class Automaton {
 
     public void toggleActive() {
 
+        float yaw = entity.getLocation().getYaw();
+        //if (yaw >= 0 && yaw < )
+
+        //entity.getLocation().getBlock().getRelative()
     }
 }

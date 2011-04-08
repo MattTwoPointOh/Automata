@@ -1,3 +1,7 @@
 name: Automata
 main: MattTwoPointOh.Automata.AutomataPlugin
 version: __VERSION_MACRO__
+commands:
+  clearcarts:
+    description: Clears all minecarts.
+    usage: /command

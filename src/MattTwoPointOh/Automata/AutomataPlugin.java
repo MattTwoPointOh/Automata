@@ -2,8 +2,17 @@ package MattTwoPointOh.Automata;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
+
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.entity.CraftMinecart;
+import org.bukkit.craftbukkit.entity.CraftStorageMinecart;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.Server;
+import org.bukkit.entity.StorageMinecart;
 import org.bukkit.event.Event.Priority;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -44,6 +53,29 @@ public class AutomataPlugin extends JavaPlugin {
 
     public void onDisable() {
 
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        if (label.equals("clearcarts")) {
+            if (!(sender instanceof Player)) return false;
+
+            Player player = (Player) sender;
+
+            for (Entity e: player.getWorld().getEntities()) {
+                if (e instanceof CraftMinecart) {
+                    automata.removeAutomaton(e);
+                    e.remove();
+                }
+            }
+
+            player.sendMessage(ChatColor.AQUA + "Removed all minecarts.");
+
+            return true;
+        }
+
+        return false;
     }
 }
 
