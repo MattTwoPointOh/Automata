@@ -21,9 +21,13 @@ import org.bukkit.util.Vector;
 public class Automaton {
     private StorageMinecart entity;
     private boolean isActive = false;
-    private BlockFace direction;
-    private Vector vector;
     private final float speed = 0.1F;
+
+    private BlockFace direction;
+    private BlockFace directionToTheLeft;
+    private byte torchToTheLeftData;
+    private Vector vector;
+    private int enclosedCount = 0;
 
     public Automaton(StorageMinecart minecart)
     {
@@ -33,23 +37,8 @@ public class Automaton {
     public void toggleActive() {
         isActive = !isActive;
 
-        if (isActive) {
-            direction = LocationFunction.getBlockFace(entity.getLocation().getYaw());
-            float x = 0;
-            float z = 0;
-
-            if (direction == BlockFace.NORTH)
-                x = -speed;
-            else if (direction == BlockFace.SOUTH)
-                x = speed;
-
-            if (direction == BlockFace.EAST)
-                z = speed;
-            else if (direction == BlockFace.WEST)
-                z = -speed;
-
-            vector = new Vector(x, 0, z);
-        }
+        if (isActive)
+            initRunningVariables();
 
         applyVelocity();
         //float yaw = entity.getLocation().getYaw();
@@ -65,6 +54,21 @@ public class Automaton {
         Block fromBlock = event.getFrom().getBlock();
         Block toBlock = event.getTo().getBlock();
         if (fromBlock == toBlock) return;
+
+        Block hallwayLeftBlock = fromBlock.getRelative(directionToTheLeft).getRelative(BlockFace.UP);
+        if (hallwayLeftBlock.getType() == Material.AIR)
+            enclosedCount = 0;
+        else
+            enclosedCount++;
+
+        if (enclosedCount == 8) {
+            enclosedCount = 0;
+
+            Block torchBlock = fromBlock.getRelative(BlockFace.UP);
+            torchBlock.setType(Material.TORCH);
+            torchBlock.setData(torchToTheLeftData);
+        }
+
         fromBlock.setType(Material.RAILS);
 
         Block aheadBlock = toBlock.getRelative(direction);
@@ -73,12 +77,17 @@ public class Automaton {
     }
 
     private void makePassagewaySuitable(Block block) {
+        Block ceilingBlock = block.getRelative(BlockFace.UP).getRelative(BlockFace.UP);
+        if (ceilingBlock.getType() == Material.SAND || ceilingBlock.getType() == Material.GRAVEL)
+            ceilingBlock.setType(Material.DIRT);
+
         block.setType(Material.AIR);
         block.getRelative(BlockFace.UP).setType(Material.AIR);
 
+
         Block floorBlock = block.getRelative(BlockFace.DOWN);
-        if (floorBlock.getType() == Material.AIR)
-            floorBlock.setType(Material.DIRT);
+        //if (floorBlock.getType() == Material.AIR)
+        floorBlock.setType(Material.DIRT);
     }
 
     private void applyVelocity() {
@@ -90,4 +99,45 @@ public class Automaton {
         }
     }
 
+    private void initRunningVariables() {
+            //We get the face given the yaw, but the cart moves the opposite direction so we get the opposing face
+            direction = LocationFunction.getBlockFace(entity.getLocation().getYaw()).getOppositeFace();
+            float x = 0;
+            float z = 0;
+
+            if (direction == BlockFace.SOUTH)
+                x = speed;
+            else if (direction == BlockFace.NORTH)
+                x = -speed;
+
+            if (direction == BlockFace.WEST)
+                z = speed;
+            else if (direction == BlockFace.EAST)
+                z = -speed;
+
+            if (direction == BlockFace.NORTH) {
+                directionToTheLeft = BlockFace.WEST;
+                torchToTheLeftData = 0x4;
+            }
+            else if (direction == BlockFace.WEST) {
+                directionToTheLeft = BlockFace.SOUTH;
+                torchToTheLeftData = 0x2;
+            }
+            else if (direction == BlockFace.SOUTH) {
+                directionToTheLeft = BlockFace.EAST;
+                torchToTheLeftData = 0x3;
+            }
+            else if (direction == BlockFace.EAST) {
+                directionToTheLeft = BlockFace.NORTH;
+                torchToTheLeftData = 0x1;
+            }
+
+            vector = new Vector(x, 0, z);
+    }
+
+    private void resetRunningVariables() {
+        direction = null;
+        vector = null;
+        enclosedCount = 0;
+    }
 }

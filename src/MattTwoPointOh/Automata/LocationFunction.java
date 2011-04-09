@@ -19,6 +19,8 @@ public class LocationFunction {
 
     public static BlockFace getBlockFace(float yaw) {
         int correctedYaw = (int) getCorrectedYaw(yaw);
+        //I'm not very confident about adding 90 degrees here... revisit this.
+        correctedYaw += 90;
 
         if (correctedYaw < 23) return BlockFace.NORTH;
         if (correctedYaw < 68) return BlockFace.NORTH_EAST;

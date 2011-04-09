@@ -43,8 +43,7 @@ public class AutomataPlayerListener extends PlayerListener {
         spawnLocation.setX(spawnLocation.getX() + 0.5d);
         spawnLocation.setZ(spawnLocation.getZ() + 0.5d);
         spawnLocation.setY(spawnLocation.getY() + 0.5d);
-        System.out.println("Original player yaw: " + event.getPlayer().getLocation().getYaw());
-        System.out.println("Resulting rounded yaw: " + LocationFunction.getRoundedYaw(event.getPlayer().getLocation().getYaw(), 4));
+
         spawnLocation.setYaw(LocationFunction.getRoundedYaw(event.getPlayer().getLocation().getYaw(), 4) + 90);
         StorageMinecart minecart = targetBlock.getWorld().spawnStorageMinecart(spawnLocation);
         System.out.println("Cart yaw after spawn: " + minecart.getLocation().getYaw());
@@ -52,8 +51,6 @@ public class AutomataPlayerListener extends PlayerListener {
         minecart.teleport(spawnLocation);
 
         automata.addAutomaton(minecart);
-
-        event.getPlayer().sendMessage("Created automaton.");
 
         //If we still have items remaining, we can decrement the amount
         //Otherwise we have to hack it a bit and remove the player's item
