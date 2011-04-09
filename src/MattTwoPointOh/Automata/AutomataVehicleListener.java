@@ -41,6 +41,7 @@ public class AutomataVehicleListener extends VehicleListener {
             event.setCancelled(true);
             event.setDamage(0);
 
+            automaton.setLastTouchedPlayer(player);
             automaton.toggleActive();
         }
     }

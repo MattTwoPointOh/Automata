@@ -15,9 +15,11 @@ import java.util.HashMap;
 public class Automata {
     private HashMap<Integer, Automaton> automatonCollection = new HashMap<Integer, Automaton>();
 
-    public void addAutomaton(StorageMinecart entity) {
+    public Automaton addAutomaton(StorageMinecart entity) {
         System.out.println("Added automaton #" + entity.getEntityId());
-        automatonCollection.put(entity.getEntityId(), new Automaton(entity));
+        Automaton automaton = new Automaton(entity);
+        automatonCollection.put(entity.getEntityId(), automaton);
+        return automaton;
     }
 
     public void removeAutomaton(Entity entity) {

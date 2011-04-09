@@ -1,9 +1,11 @@
 package MattTwoPointOh.Automata;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.StorageMinecart;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
@@ -21,6 +23,7 @@ import org.bukkit.util.Vector;
 public class Automaton {
     private StorageMinecart entity;
     private boolean isActive = false;
+    private Player lastTouchedPlayer;
     private final float speed = 0.1F;
 
     private BlockFace direction;
@@ -28,6 +31,7 @@ public class Automaton {
     private byte torchToTheLeftData;
     private Vector vector;
     private int enclosedCount = 0;
+
 
     public Automaton(StorageMinecart minecart)
     {
@@ -37,14 +41,24 @@ public class Automaton {
     public void toggleActive() {
         isActive = !isActive;
 
+        resetRunningVariables();
+
         if (isActive)
             initRunningVariables();
 
         applyVelocity();
+
+        if (lastTouchedPlayer != null && lastTouchedPlayer.isOnline()) {
+            lastTouchedPlayer.sendMessage("Automaton toggled: " + ChatColor.RED + (isActive ? "On" : "Off"));
+        }
         //float yaw = entity.getLocation().getYaw();
         //if (yaw >= 0 && yaw < )
 
         //entity.getLocation().getBlock().getRelative()
+    }
+
+    public void setLastTouchedPlayer(Player player) {
+        lastTouchedPlayer = player;
     }
 
     public void onMoved(VehicleMoveEvent event) {
@@ -65,15 +79,14 @@ public class Automaton {
             enclosedCount = 0;
 
             Block torchBlock = fromBlock.getRelative(BlockFace.UP);
-            torchBlock.setType(Material.TORCH);
-            torchBlock.setData(torchToTheLeftData);
+            torchBlock.setTypeIdAndData(Material.TORCH.getId(), torchToTheLeftData, false);
         }
 
         fromBlock.setType(Material.RAILS);
 
         Block aheadBlock = toBlock.getRelative(direction);
         makePassagewaySuitable(aheadBlock);
-        makePassagewaySuitable(aheadBlock.getRelative(direction));
+        //makePassagewaySuitable(aheadBlock.getRelative(direction));
     }
 
     private void makePassagewaySuitable(Block block) {
@@ -81,13 +94,12 @@ public class Automaton {
         if (ceilingBlock.getType() == Material.SAND || ceilingBlock.getType() == Material.GRAVEL)
             ceilingBlock.setType(Material.DIRT);
 
-        block.setType(Material.AIR);
-        block.getRelative(BlockFace.UP).setType(Material.AIR);
-
+        BlockFunction.removeBlockAndDrop(block);
+        BlockFunction.removeBlockAndDrop(block.getRelative(BlockFace.UP));
 
         Block floorBlock = block.getRelative(BlockFace.DOWN);
-        //if (floorBlock.getType() == Material.AIR)
-        floorBlock.setType(Material.DIRT);
+        if (!MaterialFunction.isSolidMaterial(floorBlock.getType()))
+            floorBlock.setType(Material.DIRT);
     }
 
     private void applyVelocity() {

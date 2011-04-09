@@ -50,7 +50,8 @@ public class AutomataPlayerListener extends PlayerListener {
         minecart.getLocation().setYaw(LocationFunction.getRoundedYaw(event.getPlayer().getLocation().getYaw(), 4));
         minecart.teleport(spawnLocation);
 
-        automata.addAutomaton(minecart);
+        Automaton automaton = automata.addAutomaton(minecart);
+        automaton.setLastTouchedPlayer(event.getPlayer());
 
         //If we still have items remaining, we can decrement the amount
         //Otherwise we have to hack it a bit and remove the player's item
